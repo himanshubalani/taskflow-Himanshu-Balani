@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply font-mono bg-app text-text-primary antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  /* Strictly disable all default shadows */
+  * {
+    box-shadow: none !important;
+  }
+}
+
+@layer components {
+  .input-field {
+    @apply h-[40px] w-full bg-input border border-border rounded-[8px] px-[12px] text-[14px] text-text-primary transition-colors duration-100;
+  }
+  .input-field:focus {
+    @apply outline-none border-accent ring-[3px] ring-[rgba(83,74,183,0.25)];
+  }
+  
+  .btn-primary {
+    @apply h-[40px] w-full bg-accent text-accent-light text-[14px] font-medium border border-border rounded-[8px] hover:bg-accent-dark transition-colors duration-100 flex items-center justify-center;
+  }
+  
+  .btn-ghost {
+    @apply h-[32px] px-3 bg-surface text-text-primary text-[12px] border border-border rounded-[8px] hover:bg-app transition-colors duration-100 flex items-center justify-center;
+  }
+
+  .label-text {
+    @apply block text-[12px] font-medium uppercase tracking-[0.08em] text-text-secondary mb-[6px];
+  }
+}
