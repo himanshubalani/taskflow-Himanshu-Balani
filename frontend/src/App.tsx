@@ -248,6 +248,18 @@ const ProjectBoard = () => {
     await fetchApi(`/tasks/${taskId}`, { method: 'DELETE' }).catch(fetchProject);
   };
 
+  const deleteProject = async () => {
+    if (!window.confirm(`Are you sure you want to delete "${project.name}" and all its tasks? This cannot be undone.`)) return;
+    
+    try {
+      await fetchApi(`/projects/${id}`, { method: 'DELETE' });
+      // Use window.location to force a full re-render so the Shell sidebar re-fetches the project list
+      window.location.href = '/'; 
+    } catch (err) {
+      alert('Failed to delete project');
+    }
+  };
+
   if (!project) return <div className="p-8 text-[13px] text-text-muted">Loading project workspace...</div>;
 
   const cols =[
@@ -268,6 +280,11 @@ const ProjectBoard = () => {
           <p className="text-[12px] text-text-muted">{project.description || 'No description provided.'}</p>
         </div>
         <div className="flex gap-2">
+          {/* NEW: Delete Project Button */}
+          <button onClick={deleteProject} className="btn-ghost text-text-hint hover:text-[#E24B4A] hover:bg-[#FCEBEB]">
+            <Trash2 className="w-3.5 h-3.5 mr-1.5" /> delete
+          </button>
+          
           <button className="btn-ghost"><ListFilter className="w-3.5 h-3.5 mr-1.5" /> filter</button>
           <button className="btn-ghost"><CircleUser className="w-3.5 h-3.5 mr-1.5" /> assign</button>
           <button onClick={() => setShowAdd(true)} className="h-[32px] px-3 bg-accent text-accent-light text-[12px] border border-border rounded-[8px] hover:bg-accent-dark transition-colors ml-2">add task +</button>
@@ -327,7 +344,7 @@ const ProjectBoard = () => {
                       </span>
                       <div className="flex gap-2 items-center">
                         {task.due_date && <span className="text-[11px] text-text-muted">{task.due_date.slice(5, 10)}</span>}
-                        <div className="w-[20px] h-[20px] bg-[#E2E0D5] border border-border rounded-full flex items-center justify-center text-[9px] text-text-secondary">?</div>
+                        <div className="w-[20px] h-[20px] bg-[#E2E0D5] border border-border rounded-full flex items-center justify-center text-[9px] text-text-secondary"> <Check className="w-3.5 h-3.5" /></div>
                       </div>
                     </div>
                   </div>
