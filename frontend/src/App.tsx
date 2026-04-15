@@ -155,7 +155,8 @@ const Shell = ({ children }: { children: React.ReactNode }) => {
   const createProject = async () => {
     const name = prompt('Project name:');
     if (!name) return;
-    const p = await fetchApi('/projects', { method: 'POST', body: JSON.stringify({ name }) });
+    const description = prompt('Project description:') || '';
+    const p = await fetchApi('/projects', { method: 'POST', body: JSON.stringify({ name, description }) });
     setProjects([...projects, p]);
   };
 
