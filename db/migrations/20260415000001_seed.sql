@@ -1,7 +1,7 @@
 -- migrate:up
 -- Password is 'password123' (bcrypt cost 12)
 INSERT INTO users (id, name, email, password) VALUES 
-('11111111-1111-1111-1111-111111111111', 'Test User', 'test@example.com', '$2a$12$7k3d9g5H5m/1rY9aQp5nF.Yq0CqG0F6kC/8Y6E1G6M/8T/8Z0A/4W');
+('11111111-1111-1111-1111-111111111111', 'Test User', 'test@example.com', '$2b$12$olPQXa9mkY.aqBdhW4Svf.r74sSAn83x2q5mdlH3AAt3aeZKJ0uAu');
 
 INSERT INTO projects (id, name, description, owner_id) VALUES 
 ('22222222-2222-2222-2222-222222222222', 'Core Web Vitals', 'Improve application performance metrics.', '11111111-1111-1111-1111-111111111111');
