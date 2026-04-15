@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useParams, Link, NavLink } from 'react-router-dom';
-import { CircleUser, Plus, Search, Check, ListFilter, ArrowRight } from 'lucide-react';
+import { CircleUser, Plus, Search, Check, ListFilter, ArrowRight, Trash2 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
@@ -234,6 +234,20 @@ const ProjectBoard = () => {
     await fetchApi(`/tasks/${taskId}`, { method: 'PATCH', body: JSON.stringify({ status }) }).catch(fetchProject);
   };
 
+  const deleteTask = async (taskId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevents the card click from also changing the task status
+    if (!window.confirm('Delete this task?')) return;
+
+    // Optimistic UI update: Remove task instantly
+    setProject((prev: any) => ({ 
+      ...prev, 
+      tasks: prev.tasks.filter((t: any) => t.id !== taskId) 
+    }));
+
+    // Make network request. If it fails, re-fetch to revert the UI.
+    await fetchApi(`/tasks/${taskId}`, { method: 'DELETE' }).catch(fetchProject);
+  };
+
   if (!project) return <div className="p-8 text-[13px] text-text-muted">Loading project workspace...</div>;
 
   const cols =[
@@ -290,10 +304,23 @@ const ProjectBoard = () => {
                 {tasks.map((task: any) => (
                   <div key={task.id} 
                     onClick={() => updateTask(task.id, col.key === 'todo' ? 'in_progress' : col.key === 'in_progress' ? 'done' : 'todo')}
-                    className={`bg-app border border-border rounded-[8px] p-[10px] mb-[6px] cursor-pointer hover:border-accent-mid transition-colors duration-100 ${col.key === 'done' ? 'opacity-65' : ''}`}>
-                    <div className={`text-[13px] font-medium text-text-primary leading-[1.4] mb-3 ${col.key === 'done' ? 'line-through text-text-muted' : ''}`}>
-                      {task.title}
+                    className={`bg-app border border-border rounded-[8px] p-[10px] mb-[6px] cursor-pointer hover:border-accent-mid transition-colors duration-100 group ${col.key === 'done' ? 'opacity-65' : ''}`}>
+                    
+                    <div className="flex justify-between items-start mb-3">
+                      <div className={`text-[13px] font-medium text-text-primary leading-[1.4] pr-2 ${col.key === 'done' ? 'line-through text-text-muted' : ''}`}>
+                        {task.title}
+                      </div>
+                      
+                      {/* Delete Button (appears slightly muted until hovered) */}
+                      <button 
+                        onClick={(e) => deleteTask(task.id, e)}
+                        className="text-text-hint hover:text-[#E24B4A] transition-colors shrink-0 opacity-0 group-hover:opacity-100"
+                        title="Delete task"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
+
                     <div className="flex justify-between items-end">
                       <span className={`text-[11px] px-2 py-0.5 rounded-full border border-border bg-priority-${task.priority}-bg text-priority-${task.priority}-text`}>
                         {task.priority}
