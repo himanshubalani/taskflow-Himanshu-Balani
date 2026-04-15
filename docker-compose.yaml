@@ -41,14 +41,5 @@ services:
       context: ./frontend
       args:
         - VITE_API_URL=${VITE_API_URL:-http://localhost:4000}
-    profiles:
-      - watch
-    x-develop:
-      watch:
-        - action: sync
-          path: ./src
-          target: /app/src
-        - action: rebuild
-          path: package.json
     ports:
       - "3000:80"
